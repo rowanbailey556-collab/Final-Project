@@ -1,93 +1,143 @@
-/* === GLOBAL === */
+/* === GLOBAL THEME === */
 body {
   font-family: "Georgia", serif;
-  background: #f4efe4; /* parchment */
+  background: #e9dfc9; /* soft parchment */
   margin: 0;
   padding: 2rem;
   display: flex;
   justify-content: center;
-  color: #2d2a26;
+  color: #2a241c;
 }
 
-/* Game container */
+/* Adds subtle paper noise */
+body::before {
+  content: "";
+  position: fixed;
+  top: 0; left: 0; right: 0; bottom: 0;
+  pointer-events: none;
+  background-image:
+     radial-gradient(rgba(0,0,0,0.03) 1px, transparent 1px),
+     radial-gradient(rgba(0,0,0,0.025) 1px, transparent 1px);
+  background-size: 3px 3px, 5px 5px;
+  z-index: -1;
+}
+
+/* === MAIN STORY CONTAINER === */
 #game {
-  background: #ffffff;
-  padding: 2rem 2.25rem;
+  background: #f8f1e3; /* parchment card */
+  padding: 2.25rem;
   max-width: 750px;
   width: 100%;
-  border-radius: 12px;
-  box-shadow: 0 8px 20px rgba(0,0,0,0.08);
-  border: 2px solid #e2dcc8;
+  border-radius: 6px;
+  box-shadow: 0 0 0 4px #d8c9a9,
+              0 0 0 8px #b6a27e,
+              0 10px 25px rgba(0,0,0,0.25);
+  border: 1px solid #b39a76;
 }
 
-/* Titles & text */
+/* Decorative top border like an old RPG module */
+#game::before {
+  content: "";
+  display: block;
+  height: 10px;
+  background: repeating-linear-gradient(
+      45deg,
+      #b6a27e,
+      #b6a27e 10px,
+      #d8c9a9 10px,
+      #d8c9a9 20px
+  );
+  margin: -2.25rem -2.25rem 1.5rem -2.25rem;
+}
+
+/* === HEADINGS === */
 h1 {
   margin-top: 0;
-  font-size: 1.8rem;
-  font-weight: 700;
-  color: #593b18; /* warm brown */
+  font-size: 2.1rem;
+  font-family: "Garamond", "Georgia", serif;
+  font-weight: 900;
+  color: #4a3826;
+  text-shadow: 1px 1px 0 #fdfaf4;
 }
 
+/* === STORY TEXT === */
 p {
-  font-size: 1.05rem;
-  line-height: 1.65;
+  font-size: 1.1rem;
+  line-height: 1.75;
   margin-bottom: 1.5rem;
 }
 
-/* === CHOICE BUTTONS === */
+/* Optional drop-cap first letter for that "storybook" feel */
+p::first-letter {
+  font-size: 2.2rem;
+  font-weight: bold;
+  float: left;
+  margin-right: 6px;
+  margin-top: 2px;
+  color: #5a412c;
+}
+
+/* === CHOICES === */
 .choices {
   display: grid;
   gap: 0.75rem;
+  margin-top: 1rem;
 }
 
 button {
-  padding: 0.75rem 1rem;
-  font-size: 1rem;
-  border-radius: 8px;
-  border: none;
+  padding: 0.7rem 1rem;
+  font-size: 1.05rem;
+  border-radius: 4px;
+  border: 1px solid #8b7355;
   cursor: pointer;
 
-  background: #d8cbb3;
-  color: #2d2a26;
+  background: linear-gradient(#f3e8d5, #e4d4b8);
+  color: #352b21;
+  font-family: "Garamond", "Georgia", serif;
   font-weight: 600;
+
   transition: background 0.2s, transform 0.15s;
 }
 
 button:hover {
-  background: #c7b79c;
+  background: linear-gradient(#f8f0dd, #eadbc0);
   transform: translateY(-2px);
 }
 
 button:active {
-  transform: translateY(0px);
+  transform: translateY(0);
 }
 
-/* === META BAR (inventory & restart buttons) === */
+/* === INVENTORY + META CONTROLS === */
 .meta {
-  margin-top: 1.75rem;
+  margin-top: 2rem;
   display: flex;
   gap: 0.75rem;
   flex-wrap: wrap;
   align-items: center;
 }
 
+/* Badge style like a chapter tag */
 .badge {
   padding: 0.35rem 0.6rem;
-  font-size: 0.9rem;
-  background: #efe7d7;
-  border: 1px solid #d8cbb3;
-  border-radius: 6px;
+  font-size: 0.95rem;
+  background: #efe6d2;
+  border: 1px solid #bba98a;
+  border-radius: 4px;
+  font-weight: 600;
+  font-family: "Garamond", serif;
+  color: #3e3327;
 }
 
-/* Restart + Soft reset buttons */
+/* Restart buttons look like old rulebook buttons */
 #restart, #softreset {
-  background: #b8d4ba; /* muted green */
-  color: #253226;
-  border: 1px solid #9cb89f;
-  border-radius: 6px;
-  padding: 0.5rem 0.75rem;
+  background: #d3c7ad;
+  color: #2c241c;
+  border: 1px solid #a89b81;
+  border-radius: 4px;
+  padding: 0.55rem 0.8rem;
 }
 
 #restart:hover, #softreset:hover {
-  background: #a3c2a6;
+  background: #e0d5bc;
 }
