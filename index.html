@@ -12,7 +12,6 @@
   <p id="text"></p>
   <div class="choices" id="choices"></div>
   <div class="meta">
-    <span id="inv" class="badge">Inventory: —</span>
     <button id="restart" aria-label="Restart story">Restart</button>
     <button id="softreset" aria-label="Go to start (keep items)">Back to Start</button>
   </div>
@@ -389,22 +388,9 @@ const story = {
 const $title   = document.getElementById("title");
 const $text    = document.getElementById("text");
 const $choices = document.getElementById("choices");
-const $inv     = document.getElementById("inv");
 const $restart = document.getElementById("restart");
 const $soft    = document.getElementById("softreset");
 
-function inventoryLabel(s) {
-  const items = [];
-  if (s.hasLantern) items.push("Lantern");
-  if (s.hasRations) items.push("Rations");
-  if (s.moonToken) items.push("Moon Token");
-  if (s.forestFragment) items.push("Forest Shard");
-  if (s.townFragment) items.push("Town Shard");
-  if (s.caveFragment) items.push("Cave Shard");
-  if (s.hasSigil) items.push("Moon-Key");
-  if (s.foxBlessing) items.push("Fox’s Favor");
-  return "Inventory: " + (items.length ? items.join(", ") : "—");
-}
 
 function go(id) {
   if (!story[id]) return;
@@ -420,9 +406,6 @@ function render(id) {
   $title.textContent = node.title;
   $text.textContent  = node.text;
   $choices.innerHTML = "";
-
-  
-  $inv.textContent = inventoryLabel(state);
 
   node.choices.forEach(choice => {
     if (choice.if && !choice.if(state)) return; 
