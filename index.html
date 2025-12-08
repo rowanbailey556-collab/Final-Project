@@ -425,7 +425,7 @@ function render(id) {
   $inv.textContent = inventoryLabel(state);
 
   node.choices.forEach(choice => {
-    if (choice.if && !choice.if(state)) return; // conditionally hide
+    if (choice.if && !choice.if(state)) return; 
     const btn = document.createElement("button");
     btn.textContent = choice.label;
     btn.addEventListener("click", () => {
