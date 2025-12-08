@@ -19,11 +19,6 @@
 </div>
 
 <script>
-/*Each node has {title, text, choices[]}
-   - A choice can have:
-       - goto: id of next node
-       - set: object of flags to set (e.g., { hasLantern:true })
-       - if:  function(state) -> boolean to show/hide choice*/
 const stateKey = "cyoa_state";
 const nodeKey  = "cyoa_node";
 let state = JSON.parse(localStorage.getItem(stateKey) || "{}");
@@ -266,7 +261,7 @@ const story = {
     ]
   },
 
-  /* ====== APPROACH TO ELDERGATE ====== */
+  /* APPROACH */
   beyondBridge: {
     title: "Eldergate Approach",
     text: "Ruined towers encircle a black gate laced with living vines. As you draw closer, any key fragments you carry seem to hum and tug toward one another.",
@@ -341,7 +336,7 @@ const story = {
     ]
   },
 
-  /* ====== KEEP & SIMPLE STATIC ENDINGS ====== */
+  /*  KEEP  */
   innerKeep: {
     title: "Heart of Eldergate",
     text: "An empty throne, a sleeping power. Your Moon-Key (and the fox’s lingering blessing, if you carry it) hums in your hand. The keep seems to lean toward your next words.",
@@ -390,7 +385,7 @@ const story = {
   }
 };
 
-/* ====== ENGINE BITS (SIMPLE VERSION) ====== */
+/*  ENGINE  */
 const $title   = document.getElementById("title");
 const $text    = document.getElementById("text");
 const $choices = document.getElementById("choices");
@@ -459,7 +454,6 @@ $restart.addEventListener("click", () => {
 
 $soft.addEventListener("click", () => go("start"));
 
-// Start where you left off, or at #start
 const initial = location.hash.slice(1) || localStorage.getItem(nodeKey) || "start";
 go(initial);
 </script>
