@@ -1,0 +1,128 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Crossroads — Fantasy CYOA</title>
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+<div id="game">
+  <h1 id="title">Loading…</h1>
+  <p id="text"></p>
+  <div class="choices" id="choices"></div>
+  <div class="meta">
+    <span id="inv" class="badge">Inventory: —</span>
+    <button id="restart" aria-label="Restart story">Restart</button>
+    <button id="softreset" aria-label="Go to start (keep items)">Back to Start</button>
+  </div>
+</div>
+
+<script>
+const stateKey = "cyoa_state";
+const nodeKey  = "cyoa_node";
+let state = JSON.parse(localStorage.getItem(stateKey) || "{}");
+
+function saveState() { localStorage.setItem(stateKey, JSON.stringify(state)); }
+function clearState() { state = {}; saveState(); }
+function setState(patch) { state = { ...state, ...patch }; saveState(); }
+
+const story = {
+  start: {
+    title: "At the Forest Edge",
+    text: "You stand where old oaks meet the moor, night just beginning to thicken. Beyond the pines lies Brindle, the moonlit town, and farther still the ruined keep of Eldergate.\n\nEveryone knows the old story: Eldergate once guarded the crossroads of the world, until its key was shattered into three fragments. The gate has slept ever since. Tonight, you’ve decided to see if the stories are true.",
+    choices: [
+      { label: "Enter the Whispering Forest", goto: "forest" },
+      { label: "Head to Brindle (town)", goto: "town" },
+      { label: "Follow the gorge road toward the caves", goto: "road" }
+    ]
+  },
+
+
+  cave: {
+    title: "Cave",
+    text: "Cold breath of stone washes over you. Without light, the dark feels suffocating.",
+    choices: [
+      { label: "Use your lantern", goto: "caveLit", if: s => !!s.hasLantern },
+      { label: "Feel along the wall (risky)", goto: "caveRisk" },
+      { label: "Back to the road", goto: "road" }
+    ]
+  },
+
+  set: { hasLantern: true, forestFragment: true } 
+
+
+
+const $title   = document.getElementById("title");
+const $text    = document.getElementById("text");
+const $choices = document.getElementById("choices");
+const $inv     = document.getElementById("inv");
+const $restart = document.getElementById("restart");
+const $soft    = document.getElementById("softreset");
+
+function inventoryLabel(s) {
+  const items = [];
+  if (s.hasLantern) items.push("Lantern");
+  if (s.hasRations) items.push("Rations");
+  if (s.moonToken) items.push("Moon Token");
+  if (s.forestFragment) items.push("Forest Shard");
+  if (s.townFragment) items.push("Town Shard");
+  if (s.caveFragment) items.push("Cave Shard");
+  if (s.hasSigil) items.push("Moon-Key");
+  if (s.foxBlessing) items.push("Fox’s Favor");
+  return "Inventory: " + (items.length ? items.join(", ") : "—");
+}
+
+function go(id) {
+  if (!story[id]) return;
+  location.hash = id;
+  localStorage.setItem(nodeKey, id);
+  render(id);
+}
+
+function render(id) {
+  const node = story[id];
+
+  
+  $title.textContent = node.title;
+  $text.textContent  = node.text;
+  $choices.innerHTML = "";
+
+  
+  $inv.textContent = inventoryLabel(state);
+
+  node.choices.forEach(choice => {
+    if (choice.if && !choice.if(state)) return; 
+    const btn = document.createElement("button");
+    btn.textContent = choice.label;
+    btn.addEventListener("click", () => {
+      if (choice.set) {
+        if (choice.set._reset) {
+          clearState();
+        } else {
+          setState(choice.set);
+        }
+      }
+      go(choice.goto);
+    });
+    $choices.appendChild(btn);
+  });
+}
+
+window.addEventListener("hashchange", () => {
+  const id = location.hash.slice(1);
+  if (story[id]) render(id);
+});
+
+$restart.addEventListener("click", () => {
+  clearState();
+  go("start");
+});
+
+$soft.addEventListener("click", () => go("start"));
+
+const initial = location.hash.slice(1) || localStorage.getItem(nodeKey) || "start";
+go(initial);
+</script>
+</body>
+</html>
