@@ -19,13 +19,11 @@
 </div>
 
 <script>
-/* ====== Minimal engine with tiny state system ======
-   - Each node has {title, text, choices[]}
+/*Each node has {title, text, choices[]}
    - A choice can have:
        - goto: id of next node
        - set: object of flags to set (e.g., { hasLantern:true })
-       - if:  function(state) -> boolean to show/hide choice
-*/
+       - if:  function(state) -> boolean to show/hide choice*/
 const stateKey = "cyoa_state";
 const nodeKey  = "cyoa_node";
 let state = JSON.parse(localStorage.getItem(stateKey) || "{}");
@@ -37,7 +35,7 @@ function setState(patch) { state = { ...state, ...patch }; saveState(); }
 const story = {
   start: {
     title: "At the Forest Edge",
-    text: "You stand where old oaks meet the moor, night just beginning to thicken. Beyond the pines lies Brindle, the moonlit town, and farther still the ruined keep of Eldergate.\n\nEveryone knows the old story: Eldergate once guarded the crossroads of the world, until its moon-key was shattered into three fragments—lost to forest, town, and stone. The gate has slept ever since. Tonight, you’ve decided to see if the keep still remembers its guardian.",
+    text: "You stand where old oaks meet the moor, night just beginning to thicken. Beyond the pines lies Brindle, the moonlit town, and farther still the ruined keep of Eldergate.\n\nEveryone knows the old story: Eldergate once guarded the crossroads of the world, until its key was shattered into three fragments. The gate has slept ever since. Tonight, you’ve decided to see if the stories are true.",
     choices: [
       { label: "Enter the Whispering Forest", goto: "forest" },
       { label: "Head to Brindle (town)", goto: "town" },
@@ -48,7 +46,7 @@ const story = {
   /* FOREST */
   forest: {
     title: "Whispering Forest",
-    text: "Leaves murmur like distant voices. Mist curls around roots. A faint glow flickers between trunks; a fox watches with curious, moon-bright eyes.\n\nSomewhere in this forest, they say, the first fragment of Eldergate’s moon-key took root.",
+    text: "Leaves murmur like distant voices. Mist curls around roots. A faint glow flickers between trunks; a fox watches with curious, moon-bright eyes.\n\nSomewhere in this forest, they say, the first fragment of Eldergate’s key took root.",
     choices: [
       { label: "Follow the glow", goto: "glow" },
       { label: "Approach the fox", goto: "fox" },
@@ -59,7 +57,7 @@ const story = {
 
   glow: {
     title: "Moss-Lit Hollow",
-    text: "A lantern hangs from a low branch, its river-green light caught in glass veined like leaf-skeletons.",
+    text: "A lantern hangs from a low branch, its river-green light caught in glass. The warm green flame illuminates a strance crecent shaped piece of wood in the base.",
     choices: [
       { label: "Take the lantern (and its strange shard)", goto: "forest", set: { hasLantern: true, forestFragment: true } },
       { label: "Leave it be", goto: "forest" }
@@ -68,7 +66,7 @@ const story = {
 
   fox: {
     title: "Red Messenger",
-    text: "The fox speaks inside your head: “Light for dark. Kindness for key. A fair trade, little wanderer.” Its eyes glimmer with starlike flecks.",
+    text: "A voice speaks inside your head: “Light for dark. Offering for key. A fair trade, little wanderer.” The fox growls quietly as you approach.",
     choices: [
       { label: "Offer a gentle pat", goto: "blessing", set: { foxBlessing: true, forestFragment: true } },
       { label: "Back away slowly", goto: "forest" }
@@ -77,7 +75,7 @@ const story = {
 
   blessing: {
     title: "Forest's Favor",
-    text: "Warmth pools in your palms, shaped like a tiny crescent of bark and light—the first fragment of the moon-key.",
+    text: "Warmth pools in your palms, shaped like a tiny crescent of bark.",
     choices: [
       { label: "Return to the path", goto: "forest" }
     ]
@@ -94,7 +92,7 @@ const story = {
   /* TOWN */
   town: {
     title: "Brindle by Moonlight",
-    text: "Lanterns sway along cobbled lanes. A tavern buzzes with song. A small shrine watches the square, silver coins and river stones in its bowl.\n\nThe second fragment of the moon-key is rumored to have fallen somewhere inside the town’s walls—claimed by devotion, not steel.",
+    text: "Lanterns sway along cobbled lanes. A tavern buzzes with song. A small shrine watches the square, silver coins and river stones in its bowl.\n\nThe second fragment of the key is rumored to have fallen somewhere inside the town’s walls.",
     choices: [
       { label: "Enter the tavern", goto: "tavern" },
       { label: "Visit the shrine", goto: "shrine" },
@@ -123,10 +121,10 @@ const story = {
   },
 
   shrine: {
-    title: "Shrine of the Quiet Moon",
+    title: "Shrine of the Moon",
     text: "Candles gutter around a smooth stone statue. A bowl of river stones and coins invites an offering.",
     choices: [
-      { label: "Make an offering (gain Town Shard)", goto: "town", set: { moonToken: true, townFragment: true } },
+      { label: "Make an offering", goto: "town", set: { moonToken: true, townFragment: true } },
       { label: "Whisper a prayer for safe paths", goto: "town", set: { prayed: true } },
       { label: "Pocket the offerings instead", goto: "end_townCursed" },
       { label: "Return to the square", goto: "town" }
@@ -135,10 +133,10 @@ const story = {
 
   gatewarden: {
     title: "Gatewarden Hobb",
-    text: "“Eldergate’s cursed,” says Hobb, moustache bristling. “If you must go, take light—and mind the bridge troll if you cross the north span. They say the gate won’t open without a key the moon itself broke.”",
+    text: "“Eldergate’s cursed,” says Hobb, moustache bristling. “If you must go, take light and mind the bridge troll if you cross the north span. They say the gate won’t open without a key the moon itself.”",
     choices: [
       { label: "Thank him and head out", goto: "start" },
-      { label: "Ask about the troll (needs rumor)", goto: "trollTip", if: s => !!s.knowsBridge }
+      { label: "Ask about the troll", goto: "trollTip", if: s => !!s.knowsBridge }
     ]
   },
 
@@ -164,7 +162,7 @@ const story = {
     text: "Stones cracked by roots lead toward a misting gorge. To the north, a bridge arcs over a dark chasm. To the south, a cave yawns in the cliff.\n\nMiners once swore they saw the third fragment of the moon-key carved into the rock somewhere beneath these hills.",
     choices: [
       { label: "Cross the north bridge", goto: "bridge" },
-      { label: "Explore the cave (light recommended)", goto: "cave" },
+      { label: "Explore the cave", goto: "cave" },
       { label: "Return to the forest edge", goto: "start" }
     ]
   },
@@ -174,7 +172,7 @@ const story = {
     text: "A shape hunched beneath the arch sniffs the night air.",
     choices: [
       { label: "Call out kindly", goto: "trollHello" },
-      { label: "Offer rations (if you have them)", goto: "trollTrade", if: s => !!s.hasRations },
+      { label: "Offer rations", goto: "trollTrade", if: s => !!s.hasRations },
       { label: "Try to sneak past", goto: "trollSneak" }
     ]
   },
@@ -183,7 +181,7 @@ const story = {
     title: "Bridge-Troll Brum",
     text: "“Hungry,” rumbles the voice. “Got story? Got snack?”",
     choices: [
-      { label: "Tell a story (requires fox blessing or rumor)", goto: "trollPass",
+      { label: "Tell a story", goto: "trollPass",
         if: s => s.foxBlessing || s.knowsBridge },
       { label: "I have a snack", goto: "trollTrade", if: s => !!s.hasRations },
       { label: "No, sorry…", goto: "trollSneak" }
@@ -254,7 +252,7 @@ const story = {
 
   chest: {
     title: "Gift of Stone",
-    text: "Inside the chest lies a heavy shard of silvered rock, cut into a curve that clearly fits with others. The third fragment of the moon-key.",
+    text: "Inside the chest lies a heavy shard of silvered rock, cut into a curve that clearly fits with others. The third fragment of the key.",
     choices: [
       { label: "Take the Cave Shard", goto: "road", set: { caveFragment: true } }
     ]
@@ -273,7 +271,7 @@ const story = {
     title: "Eldergate Approach",
     text: "Ruined towers encircle a black gate laced with living vines. As you draw closer, any key fragments you carry seem to hum and tug toward one another.",
     choices: [
-      { label: "Assemble the Moon-Key from your three shards", 
+      { label: "Assemble the Key from your three shards", 
         goto: "gateOpen",
         if: s => s.forestFragment && s.townFragment && s.caveFragment,
         set: { hasSigil: true } 
@@ -285,16 +283,16 @@ const story = {
 
   walls: {
     title: "Cracked Parapet",
-    text: "You find a toppled section—too high to climb without help.",
+    text: "You find a toppled section—too high to climb without help. You see a small burrow about the right size for a fox.",
     choices: [
-      { label: "Call for aid (fox?)", goto: "foxAid", if: s => !!s.foxBlessing },
+      { label: "Call for the fox", goto: "foxAid", if: s => !!s.foxBlessing },
       { label: "Return to the gate", goto: "beyondBridge" }
     ]
   },
 
   foxAid: {
     title: "A Friend Returns",
-    text: "The red fox appears, tail like a banner. Illusory steps bloom in the air, leading up and over the broken wall.",
+    text: "The red fox appears, tail puffed like a banner. Illusory steps bloom in the air, leading up and over the broken wall.",
     choices: [
       { label: "Ascend the steps", goto: "innerKeep", set: { enteredEldergate: true } }
     ]
@@ -311,10 +309,10 @@ const story = {
 
   gateWait: {
     title: "Answer in Vines",
-    text: "The vines relax a little—as if expecting a sign.\n\nYou suspect light, prayer, or a key might sway them.",
+    text: "The vines relax a little—as if expecting a sign.",
     choices: [
       { label: "Hold up the lantern", goto: "gateGlow", if: s => !!s.hasLantern },
-      { label: "Whisper a prayer (if you prayed)", goto: "gatePrayer", if: s => !!s.prayed },
+      { label: "Whisper a prayer", goto: "gatePrayer", if: s => !!s.prayed },
       { label: "Return", goto: "beyondBridge" }
     ]
   },
@@ -328,7 +326,7 @@ const story = {
   },
 
   gatePrayer: {
-    title: "Moon’s Mercy",
+    title: "Moon Call",
     text: "A cool breeze sweeps through. The vines slump, soothed, and part just enough to slip through.",
     choices: [
       { label: "Slip inside", goto: "innerKeep", set: { enteredEldergate: true } }
@@ -343,14 +341,14 @@ const story = {
     ]
   },
 
-  /* ====== KEEP & REACTIVE ENDINGS ====== */
+  /* ====== KEEP & SIMPLE STATIC ENDINGS ====== */
   innerKeep: {
     title: "Heart of Eldergate",
     text: "An empty throne, a sleeping power. Your Moon-Key (and the fox’s lingering blessing, if you carry it) hums in your hand. The keep seems to lean toward your next words.",
     choices: [
-      { label: "Swear to guard this place (Guardian Ending)", goto: "end_guardian" },
-      { label: "Wake the old magic (Awakener Ending)", goto: "end_awakener", if: s => s.hasSigil || s.foxBlessing },
-      { label: "Leave it sleeping and go home (Pilgrim Ending)", goto: "end_pilgrim" },
+      { label: "Swear to guard this place", goto: "end_guardian" },
+      { label: "Wake the old magic for yourself", goto: "end_awakener", if: s => s.hasSigil || s.foxBlessing },
+      { label: "Leave it sleeping and go home", goto: "end_pilgrim" },
       {
         label: "Stand between sleeping and waking (Threshold Ending)",
         goto: "end_threshold",
@@ -360,184 +358,39 @@ const story = {
   },
 
   end_guardian: {
-    title: state => "Ending: Warden of the Crossroads",
-    text: state => {
-      const allies = [];
-      if (state.foxBlessing) allies.push("the red fox who first trusted you");
-      if (state.owesKindness || state.hasRations || state.knowsBridge) allies.push("Brum the bridge-troll");
-      if (state.prayed || state.moonToken || state.townFragment) allies.push("the quiet priests of Brindle");
-
-      let lineAllies = "";
-      if (allies.length === 1) {
-        lineAllies = ` You don’t stand alone. At your side walks ${allies[0]}.`;
-      } else if (allies.length > 1) {
-        const last = allies.pop();
-        lineAllies = ` You don’t stand alone. At your side walk ${allies.join(", ")} and ${last}.`;
-      }
-
-      const camePrepared = state.forestFragment && state.townFragment && state.caveFragment;
-
-      const keyLine = camePrepared
-        ? " The Moon-Key hangs at your belt, re-forged from all three shards you hunted across forest, town, and stone."
-        : " The Moon-Key at your belt hums softly, even if you never found every story that made it whole.";
-
-      const foxTouch = state.foxBlessing
-        ? " Sometimes, when patrol is quiet, you feel a gentle brush at your ankle and hear distant paws on the stones—Eldergate’s wild messenger checking in."
-        : "";
-
-      return (
-        "You choose the simplest vow and the hardest life: to stay.\n\n" +
-        "Under your watch, Eldergate stops being a rumor and becomes a promise: whoever reaches its gate in need will find a listening ear and a safe fire, if you deem them worthy." +
-        keyLine +
-        lineAllies +
-        "\n\nTravelers begin carving new paths to the keep. Maps change. Stories change with them." +
-        foxTouch +
-        "\n\nYears from now, children in Brindle will point to the glimmer on the hill and say, “That’s where the Warden lives.” They’ll be right."
-      );
-    },
+    title: "Ending: Warden of the Crossroads",
+    text: "You choose the simplest vow and the hardest life: to stay.\n\nUnder your watch, Eldergate stops being a rumor and becomes a promise. Travelers who reach its gate find a listening ear and a safe fire if you deem them worthy. The Key hangs at your belt and the road slowly bends new paths toward the keep.\n\nYears from now, children in Brindle will point to the glimmer on the hill and say, “That’s where the Warden lives.”",
     choices: [
       { label: "Play again (clear progress)", goto: "start", set: { _reset: true } }
     ]
   },
 
   end_awakener: {
-    title: state => "Ending: The Moon Stirs",
-    text: state => {
-      const usedKey = state.hasSigil || (state.forestFragment && state.townFragment && state.caveFragment);
-      const forestLine = state.foxBlessing
-        ? "In the forest, foxes sit on stones and watch the stars rearrange themselves as if they’re catching up on old gossip."
-        : "In the forest, trees shed leaves shaped like tiny crescents that shimmer briefly before turning to normal gold.";
-
-      const townLine = state.townFragment || state.prayed
-        ? "In Brindle, the shrine’s statue now sometimes turns its head, ever so slightly, toward travelers about to make a bad choice."
-        : "In Brindle, people wake from strange dreams of silver gates and feel oddly brave about difficult conversations.";
-
-      const caveLine = state.caveFragment
-        ? "Below the hills, the caves light up with runes you once stumbled past—miners swear they can hear a heartbeat in the stone, slow and patient."
-        : "Deep underground, something old shifts just enough that tunnels straighten and lost miners find their way out without knowing why.";
-
-      const keyLine = usedKey
-        ? " The Moon-Key in your hands glows so bright you have to look away as its shape dissolves into the arch above the throne."
-        : " You speak, and the keep accepts your words as if they were the missing key it was always waiting for.";
-
-      return (
-        "You don’t sit the throne. You wake it.\n\n" +
-        "Your words spill into Eldergate like light into a dry well. Magic that slept for centuries stretches, yawns, and spills outward in ripples you can’t quite see—but you feel them in your bones." +
-        keyLine +
-        "\n\n" +
-        forestLine + "\n" +
-        townLine + "\n" +
-        caveLine +
-        "\n\nPeople will call this a new age someday. They’ll argue in taverns about when, exactly, it began.\n" +
-        "You’ll know: it was the moment you chose to wake an old, patient place and trust the world to grow around its light."
-      );
-    },
+    title: "Ending: The Moon Stirs",
+    text: "You do not sit the throne; you wake it.\n\nYour words spill into Eldergate like light into a dry well. Magic that slept for centuries stretches, yawns, and spills outward in quiet waves. In the forest, strange leaves fall in crescent shapes. In Brindle, people dream of silver gates and wake to an uneasy feeling. Deep below the hills, tunnels straighten just enough to find every corner of the world.",
     choices: [
       { label: "Play again (clear progress)", goto: "start", set: { _reset: true } }
     ]
   },
 
   end_pilgrim: {
-    title: state => "Ending: The One Who Walked Away",
-    text: state => {
-      const shards = [
-        state.forestFragment ? "a bark-soft crescent that smells like rain on moss" : null,
-        state.townFragment   ? "a shrine-polished sliver that remembers whispered prayers" : null,
-        state.caveFragment   ? "a heavy shard of stone that hums faintly in your pocket" : null
-      ].filter(Boolean);
-
-      let shardLine = "";
-      if (shards.length === 0) {
-        shardLine = " You leave Eldergate behind with empty hands, but your pockets are full of small, ordinary stones you picked up without thinking.";
-      } else if (shards.length === 1) {
-        shardLine = " You carry one strange keepsake from the road—" + shards[0] + ". You tell yourself it’s just a souvenir.";
-      } else {
-        const last = shards.pop();
-        shardLine = " You carry a handful of strange keepsakes—" + shards.join(", ") + " and " + last + ". They knock together softly when you walk, like teeth in a closed mouth.";
-      }
-
-      const foxLine = state.foxBlessing
-        ? " Sometimes a red fox shadows you at the edge of the trees. It never comes close, but when you make a choice you’ll regret, you swear you hear it sigh."
-        : "";
-
-      const trollLine = state.hasRations || state.owesKindness || state.knowsBridge
-        ? " Brum, the bridge-troll, tells travelers that you could have ruled a keep and chose the road instead. Most don’t believe him. Trolls are known liars when it comes to legends."
-        : "";
-
-      return (
-        "You turn away before Eldergate can decide what to make of you.\n\n" +
-        "The gate shrinks behind you with every step, until it’s just another shape in the hills, and then nothing at all. The world in front of you is wide, ordinary, and absolutely full of smaller crossroads." +
-        shardLine +
-        "\n\nIn inns and field-camps and roadside ditches, you start to tell a story about a ruined keep and a key made from broken moonlight. You never quite finish it the same way twice." +
-        foxLine +
-        trollLine +
-        "\n\nOne night, years from now, a young traveler will knock on your door with bright eyes and a pack full of maps. “Have you ever heard of a place called Eldergate?” they’ll ask.\n" +
-        "You’ll smile, and decide where, exactly, you want their story to begin."
-      );
-    },
+    title: "Ending: The One Who Walked Away",
+    text: "You turn away before Eldergate can decide what to make of you.\n\nThe gate shrinks behind you with every step, until it’s just another shape in the hills. The world ahead is wide and ordinary, but every crossroad feels a little sharper now. You carry what you learned here like a quiet stone in your pocket.\n\nIn inns and field-camps, you tell a story about a ruined keep and a key made from broken moonlight. You never finish the tale quite the same way twice.",
     choices: [
       { label: "Play again (clear progress)", goto: "start", set: { _reset: true } }
     ]
   },
 
   end_threshold: {
-    title: state => "Ending: The Threshold Walker",
-    text: state => {
-      const hasSomeShards =
-        state.forestFragment || state.townFragment || state.caveFragment;
-
-      const entryLine =
-        state.foxBlessing
-          ? "You didn’t come here with a perfect key. You came on soft paws and half-steps, following a fox and a feeling."
-          : state.prayed
-            ? "You didn’t come here with a perfect key. You came with a small prayer and the nerve to knock anyway."
-            : state.hasLantern
-              ? "You didn’t come here with a perfect key. You came with borrowed light and a stubborn refusal to turn back."
-              : "You didn’t come here with a perfect key. Somehow, you still crossed the threshold.";
-
-      let shardLine = "";
-      if (!hasSomeShards) {
-        shardLine = " The Moon-Key shards were never fully yours; you’ve only heard about them in songs and warnings.";
-      } else {
-        const pieces = [];
-        if (state.forestFragment) pieces.push("a memory of bark and starlight");
-        if (state.townFragment)   pieces.push("a whisper of coins and candle-smoke");
-        if (state.caveFragment)   pieces.push("a weight of humming stone");
-
-        if (pieces.length === 1) {
-          shardLine = " You carry just one fragment of that story—" + pieces[0] + "—and somehow, it was enough for the door to notice you.";
-        } else {
-          const last = pieces.pop();
-          shardLine = " You carry scattered pieces of that story—" + pieces.join(", ") + " and " + last + "—but they never quite clicked together in your hands.";
-        }
-      }
-
-      const foxLine = state.foxBlessing
-        ? " Somewhere in the rafters, a red tail flicks. The keep has already decided you’re one of its creatures."
-        : "";
-
-      const townLine = state.prayed || state.townFragment
-        ? " The faint smell of shrine-incense hangs in the hall, as if Brindle’s little prayers have followed you inside."
-        : "";
-
-      return (
-        entryLine +
-        "\n\nEldergate studies you. Not as a ruler, not as a supplicant, but as something in between: a person who knows how to stand in doorways and listen to both sides." +
-        shardLine +
-        "\n\nYou sit on the bottom step of the throne instead of the seat itself. From there, you can see the gate and the road, the way the world leans toward this place without quite touching it." +
-        foxLine +
-        townLine +
-        "\n\nYou don’t wake the keep. You don’t let it sleep either. You learn its moods, its creaks, the way its magic tenses when storms roll in. Travelers who arrive at bad moments find you first, sitting on the step, deciding whether to send them away or invite them deeper." +
-        "\n\nYears from now, people will argue about whether Eldergate ever truly ‘returned.’ They’ll say it never opened all the way, never shut all the way either.\nYou’ll shrug, and keep sitting where you always have—right on the threshold, where both answers can be true."
-      );
-    },
+    title: "Ending: The Threshold Walker",
+    text: "You reached the heart of Eldergate without a perfect key, without every shard in its proper place.\n\nInstead of the throne, you choose the bottom step. From there, you can see both the gate and the hall behind you. You learn the keep’s creaks and silences, the way the air tightens when storms roll over the hills.\n\nYou do not fully wake Eldergate, and you do not let it sleep. When travelers arrive at uncertain moments, they find you sitting on the step, deciding whether to send them away or invite them deeper. Years from now, people will argue about whether the keep ever truly returned. You will shrug, still sitting where you belong: right on the threshold.",
     choices: [
       { label: "Play again (clear progress)", goto: "start", set: { _reset: true } }
     ]
   }
 };
 
-/* ====== Engine bits ====== */
+/* ====== ENGINE BITS (SIMPLE VERSION) ====== */
 const $title   = document.getElementById("title");
 const $text    = document.getElementById("text");
 const $choices = document.getElementById("choices");
@@ -568,15 +421,12 @@ function go(id) {
 function render(id) {
   const node = story[id];
 
-  // Allow title/text to be either plain strings or functions of state
-  const title = typeof node.title === "function" ? node.title(state) : node.title;
-  const text  = typeof node.text  === "function" ? node.text(state)  : node.text;
-
-  $title.textContent = title;
-  $text.textContent  = text;
+  
+  $title.textContent = node.title;
+  $text.textContent  = node.text;
   $choices.innerHTML = "";
 
-  // Update inventory badge
+  
   $inv.textContent = inventoryLabel(state);
 
   node.choices.forEach(choice => {
@@ -584,7 +434,6 @@ function render(id) {
     const btn = document.createElement("button");
     btn.textContent = choice.label;
     btn.addEventListener("click", () => {
-      // Apply state changes, including special reset
       if (choice.set) {
         if (choice.set._reset) {
           clearState();
@@ -610,6 +459,7 @@ $restart.addEventListener("click", () => {
 
 $soft.addEventListener("click", () => go("start"));
 
+// Start where you left off, or at #start
 const initial = location.hash.slice(1) || localStorage.getItem(nodeKey) || "start";
 go(initial);
 </script>
