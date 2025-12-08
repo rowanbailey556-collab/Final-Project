@@ -4,7 +4,7 @@ Credit EJP, ChatGPT
 
 Game can be found at: https://rowanbailey556-collab.github.io/Final-Project/#start
 
-
+Proposal:
 Team Members Rowan Bailey (solo) (add teammates if any)
 
 Application Overview (end-user perspective) Crossroads is a choose-your-own-adventure game. Players read a short scene, pick from 2–3 choices, and instantly branch to new scenes with unique outcomes.
